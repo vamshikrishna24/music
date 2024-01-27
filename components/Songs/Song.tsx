@@ -1,7 +1,5 @@
 import { FileType } from "@/typings";
-import Image from "next/image";
 import React from "react";
-import { AspectRatio } from "../ui/aspect-ratio";
 
 function Song({ file }: { file: FileType }) {
   return (

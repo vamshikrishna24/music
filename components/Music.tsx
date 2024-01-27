@@ -3,6 +3,7 @@ import Dropzone from "./Dropzone";
 import { db } from "@/firebase";
 import { FileType } from "@/typings";
 import SongsList from "./Songs/SongsList";
+import Mediator from "./Songs/Mediator";
 
 async function Music() {
   const docResults = await getDocs(collection(db, "music"));
@@ -19,7 +20,7 @@ async function Music() {
   return (
     <div>
       <Dropzone />
-      <SongsList skeletonFiles={skeletonFiles} />
+      <Mediator skeletonFiles={skeletonFiles} />
     </div>
   );
 }
