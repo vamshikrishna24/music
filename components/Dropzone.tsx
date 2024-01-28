@@ -12,6 +12,7 @@ import {
   uploadBytes,
   uploadString,
 } from "firebase/storage";
+import toast from "react-hot-toast";
 
 function Dropzone() {
   const maxSize = 20971520;
@@ -30,8 +31,12 @@ function Dropzone() {
   };
 
   const uploadMusic = async (selectedFile: File) => {
+    const toastId = toast.loading("Uploading File...");
     if (selectedFile.type !== mp3MimeType) {
       console.log("Invalid file type. Please select an MP3 file.");
+      toast.error("Error in Uploading File", {
+        id: toastId,
+      });
       return;
     }
     const metadata = await mm.parseBlob(selectedFile);
@@ -61,6 +66,10 @@ function Dropzone() {
       await updateDoc(doc(db, "music", docRef.id), {
         songUrl: downloadUrl,
       });
+    });
+
+    toast.success("File Upload Successfull", {
+      id: toastId,
     });
   };
 
