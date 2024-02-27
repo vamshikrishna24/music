@@ -20,7 +20,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
 
   const handleProgress = (state: any) => {
     // Handle progress updates here if needed
-    console.log("Current time: ", state.playedSeconds);
+    // console.log("Current time: ", state.playedSeconds);
   };
   return (
     <div>
@@ -29,9 +29,10 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
         playing={playing}
         volume={volume}
         onProgress={handleProgress}
-        width="100%"
+        height="2%"
+        width="2%"
       />
-      <div>
+      <div className="flex items-center justify-center">
         <button onClick={handlePlayPause}>{playing ? "Pause" : "Play"}</button>
         <input
           type="range"

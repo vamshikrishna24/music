@@ -1,6 +1,4 @@
-import Header from "@/components/Header";
-import Music from "./../components/Music";
-import Link from "next/link";
+import Music from "@/components/Music";
 
 export default function Home() {
   return (

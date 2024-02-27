@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useState } from "react";
 import * as mm from "music-metadata-browser";
 import DropzoneComponent from "react-dropzone";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
@@ -13,12 +13,16 @@ import {
   uploadString,
 } from "firebase/storage";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 function Dropzone() {
+  const [uploading, setUploading] = useState(false);
   const maxSize = 20971520;
   const mp3MimeType = "audio/mpeg";
+  const router = useRouter();
 
   const onDrop = (acceptedFiles: File[]) => {
+    setUploading(true);
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onabort = () => console.log("file reading was aborted");
@@ -71,11 +75,14 @@ function Dropzone() {
     toast.success("File Upload Successfull", {
       id: toastId,
     });
+    setUploading(false);
+
+    if (uploading == false) router.push("/");
   };
 
   return (
     <div className="m-3">
-      <DropzoneComponent onDrop={onDrop}>
+      <DropzoneComponent onDrop={onDrop} disabled={uploading}>
         {({
           getRootProps,
           getInputProps,

@@ -23,23 +23,14 @@ function Song({ file, onClick }: SongProps) {
             <p className="text-sm">Year: {file.year}</p>
           </div>
         </div>
-        <div className="mt-1">
+        {/* <div className="mt-1">
           <audio controls>
             <source src={file.song} type="audio/mp3" />
             Your browser does not support the audio element.
           </audio>
-        </div>
+        </div> */}
       </div>
     </div>
-
-    //  <p>Artist: {file.artist}</p>
-    //   <p>Title: {file.title}</p>
-    //   <p>Year: {file.year}</p>
-    //   <img src={file.picture} />
-    //   <audio controls>
-    //     <source src={file.song} type="audio/mp3" />
-    //     Your browser does not support the audio element.
-    //   </audio>
   );
 }
 

@@ -1,8 +1,7 @@
 import { collection, getDocs } from "firebase/firestore";
-import Dropzone from "./Dropzone";
 import { db } from "@/firebase";
 import { FileType } from "@/typings";
-import Mediator from "./Songs/Mediator";
+import SongsList from "./Songs/SongsList";
 
 async function Music() {
   const docResults = await getDocs(collection(db, "music"));
@@ -18,8 +17,8 @@ async function Music() {
 
   return (
     <div>
-      <Dropzone />
-      <Mediator skeletonFiles={skeletonFiles} />
+      {/* <Dropzone /> */}
+      <SongsList />
     </div>
   );
 }
