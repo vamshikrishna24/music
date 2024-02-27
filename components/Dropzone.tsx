@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as mm from "music-metadata-browser";
 import DropzoneComponent from "react-dropzone";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
@@ -17,12 +17,22 @@ import { useRouter } from "next/navigation";
 
 function Dropzone() {
   const [uploading, setUploading] = useState(false);
+  const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [filesUploaded, setFilesUploaded] = useState<number>(0);
+  const [redirect, setRedirect] = useState<boolean>(false);
   const maxSize = 20971520;
   const mp3MimeType = "audio/mpeg";
   const router = useRouter();
 
+  useEffect(() => {
+    if (redirect) {
+      router.push("/");
+    }
+  }, [redirect, router]);
+
   const onDrop = (acceptedFiles: File[]) => {
     setUploading(true);
+    setFilesToUpload(acceptedFiles);
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onabort = () => console.log("file reading was aborted");
@@ -75,9 +85,11 @@ function Dropzone() {
     toast.success("File Upload Successfull", {
       id: toastId,
     });
-    setUploading(false);
-
-    if (uploading == false) router.push("/");
+    setFilesUploaded((prev) => prev + 1);
+    if (filesUploaded === filesToUpload.length) {
+      setRedirect(true);
+      setUploading(false);
+    }
   };
 
   return (
