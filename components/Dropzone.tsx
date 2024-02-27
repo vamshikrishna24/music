@@ -23,6 +23,7 @@ function Dropzone() {
   const maxSize = 20971520;
   const mp3MimeType = "audio/mpeg";
   const router = useRouter();
+  let downloadUrl = "";
 
   useEffect(() => {
     if (redirect) {
@@ -51,6 +52,7 @@ function Dropzone() {
       toast.error("Error in Uploading File", {
         id: toastId,
       });
+      setUploading(false);
       return;
     }
     const metadata = await mm.parseBlob(selectedFile);
@@ -60,17 +62,29 @@ function Dropzone() {
           "base64"
         )}`
       : "";
+    if (!pictureData) {
+      const imageStorageRef = ref(storage, "images/Sample.jpg");
+      const response = await fetch("/download.png");
+      const blob = await response.blob();
+      await uploadBytes(imageStorageRef, blob);
+      downloadUrl = await getDownloadURL(imageStorageRef);
+    } else {
+      const imageStorageRef = ref(
+        storage,
+        `images/${metadata.common.title}.jpg`
+      );
+      await uploadString(imageStorageRef, pictureUrl, "data_url");
 
-    const imageStorageRef = ref(storage, `images/${metadata.common.title}.jpg`);
-    await uploadString(imageStorageRef, pictureUrl, "data_url");
-
-    const downloadURL = await getDownloadURL(imageStorageRef);
+      downloadUrl = await getDownloadURL(imageStorageRef);
+    }
 
     const docRef = await addDoc(collection(db, "music"), {
-      artist: metadata.common.artist,
-      title: metadata.common.title,
-      year: metadata.common.year,
-      picture: downloadURL,
+      artist: metadata.common.artist ? metadata.common.artist : "test",
+      title: metadata.common.title
+        ? metadata.common.title
+        : "No Proper Meta Data",
+      year: metadata.common.year ? metadata.common.year : "test",
+      picture: downloadUrl,
     });
 
     const fileStorageRef = ref(storage, `songs/${metadata.common.title}`);
