@@ -1,10 +1,8 @@
-
 import { collection, getDocs } from "firebase/firestore";
 import Dropzone from "./Dropzone";
 import { db } from "@/firebase";
 import { FileType } from "@/typings";
 import Mediator from "./Songs/Mediator";
-import { useEffect } from "react";
 
 async function Music() {
   const docResults = await getDocs(collection(db, "music"));
@@ -17,7 +15,6 @@ async function Music() {
     year: doc.data().year,
     song: doc.data().songUrl,
   }));
-
 
   return (
     <div>

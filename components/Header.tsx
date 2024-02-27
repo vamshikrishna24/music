@@ -1,5 +1,6 @@
 import React from "react";
 import { Themetoggler } from "@/components/ThemeToggler";
+import Link from "next/link";
 
 function Header() {
   return (
