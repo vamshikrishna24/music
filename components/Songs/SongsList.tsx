@@ -2,16 +2,16 @@
 import { FileType } from "@/typings";
 import React, { useEffect, useState } from "react";
 import Song from "./Song";
-import AudioPlayer from "../AudioPlayer";
 import { collection, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
+import { useAppState } from "@/store/store";
 
 function SongsList() {
-  const [selectedSong, setSelectedSong] = useState<FileType | null>(null);
   const [initialFiles, setInitialFiles] = useState<FileType[]>([]);
   const [docs, loading, error] = useCollection(query(collection(db, "music")));
 
+  const [setSong] = useAppState((state) => [state.setSong]);
   useEffect(() => {
     if (!docs) return;
     const files: FileType[] = docs.docs.map((doc) => ({
@@ -25,7 +25,7 @@ function SongsList() {
     setInitialFiles(files);
   }, [docs]);
   const handleSongClick = (file: FileType) => {
-    setSelectedSong(file);
+    setSong(file);
   };
   return (
     <div>
@@ -38,7 +38,6 @@ function SongsList() {
           />
         ))}
       </div>
-      {selectedSong && <AudioPlayer selectedSong={selectedSong} />}
     </div>
   );
 }

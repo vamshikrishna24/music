@@ -7,7 +7,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 
 interface AudioPlayerProps {
-  selectedSong: FileType | null; // Specify the prop type for selectedSong
+  selectedSong: FileType | null;
 }
 
 function AudioPlayer({ selectedSong }: AudioPlayerProps) {
@@ -42,18 +42,18 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   };
 
   return (
-    <div>
+    <div className="bg-slate-200 dark:bg-slate-800">
       <ReactPlayer
         ref={playerRef}
         url={selectedSong?.song}
         playing={playing}
         //volume={volume}
         onProgress={handleProgress}
-        height="2%"
-        width="2%"
+        height="0%"
+        width="0%"
         onDuration={handleDuration}
       />
-      <div className="flex items-center justify-center mx-4 mb-3 space-x-4">
+      <div className="flex items-center justify-center mx-4  space-x-4">
         <div className="w-20 h-20">
           <img
             src={selectedSong?.picture}
