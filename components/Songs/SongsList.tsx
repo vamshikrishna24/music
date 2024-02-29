@@ -11,6 +11,7 @@ function SongsList() {
   const [selectedSong, setSelectedSong] = useState<FileType | null>(null);
   const [initialFiles, setInitialFiles] = useState<FileType[]>([]);
   const [docs, loading, error] = useCollection(query(collection(db, "music")));
+
   useEffect(() => {
     if (!docs) return;
     const files: FileType[] = docs.docs.map((doc) => ({
@@ -28,7 +29,6 @@ function SongsList() {
   };
   return (
     <div>
-      <p className="text-center font-medium text-xl m-5 w-fit">All Songs</p>
       <div className=" ">
         {initialFiles.map((file) => (
           <Song

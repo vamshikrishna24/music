@@ -16,8 +16,9 @@ async function Music() {
   }));
 
   return (
-    <div>
+    <div className="h-full overflow-y-scroll">
       {/* <Dropzone /> */}
+      <p className="text-left font-medium text-xl m-5 w-full">All Songs</p>
       <SongsList />
     </div>
   );
