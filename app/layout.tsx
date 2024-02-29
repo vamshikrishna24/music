@@ -10,6 +10,8 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Music App",
   description: "Fun time Listening TOGETHER",
+  manifest: "/manifest.json",
+  icons: { apple: "/icon.png" },
 };
 
 export default function RootLayout({
