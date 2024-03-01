@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "both": "concurrently \"npm run dev\" \"nodemon server/server.js\""
+    "both": "concurrently \"npm run dev\" \"node server/server.js\""
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
