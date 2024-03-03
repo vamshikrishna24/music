@@ -1,29 +1,10 @@
-"use client";
 import AudioPlayer from "@/components/AudioPlayer";
 import Music from "@/components/Music";
 import { useAppState } from "@/store/store";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 
 export default function Home() {
-  const { songFile, socket, connectSocket, setSong } = useAppState();
-  useEffect(() => {
-    if (!socket) connectSocket();
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
-  }, []);
-  socket?.on("first", (data) => {
-    setSong(data[data]);
-  });
-  useEffect(() => {
-    socket?.on("message", (message) => {
-      setSong(message);
-      console.log(message);
-    });
-  }, [songFile]);
+  const { songFile } = useAppState();
+
   return (
     <div className="h-full overflow-hidden">
       <div style={{ height: "calc(100vh - 145px)" }}>

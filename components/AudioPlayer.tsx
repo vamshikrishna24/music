@@ -1,7 +1,7 @@
 "use client";
 
 import { FileType } from "@/typings";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -16,6 +16,10 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   const [duration, setDuration] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
   const playerRef = useRef<ReactPlayer>(null);
+
+  useEffect(() => {
+    setPlaying(true);
+  }, [selectedSong]);
 
   const handlePlayPause = () => {
     setPlaying(!playing);
