@@ -6,11 +6,12 @@ import { collection, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAppState } from "@/store/store";
+import { useSocket } from "../socket-provider";
 
 function SongsList() {
   const [initialFiles, setInitialFiles] = useState<FileType[]>([]);
   const [docs, loading, error] = useCollection(query(collection(db, "music")));
-
+  const { socket } = useSocket();
   const { setSong, songFile } = useAppState();
   useEffect(() => {
     if (!docs) return;
@@ -27,6 +28,7 @@ function SongsList() {
 
   const handleSongClick = (file: FileType) => {
     setSong(file);
+    socket.emit("song", file);
   };
   return (
     <div>

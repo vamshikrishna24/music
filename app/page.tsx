@@ -1,10 +1,17 @@
+"use client";
 import AudioPlayer from "@/components/AudioPlayer";
 import Music from "@/components/Music";
+import { useSocket } from "@/components/socket-provider";
 import { useAppState } from "@/store/store";
+import { useEffect } from "react";
 
 export default function Home() {
-  const { songFile } = useAppState();
+  const { setSong, songFile } = useAppState();
+  const { socket } = useSocket();
 
+  socket.on("selectedSong", (file) => {
+    setSong(file);
+  });
   return (
     <div className="h-full overflow-hidden">
       <div style={{ height: "calc(100vh - 145px)" }}>
