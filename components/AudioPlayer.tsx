@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import { useSocket } from "./socket-provider";
 
 interface AudioPlayerProps {
   selectedSong: FileType | null;
@@ -12,21 +13,22 @@ interface AudioPlayerProps {
 
 function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   const [playing, setPlaying] = useState(true);
-  const [volume, setVolume] = useState(0.5);
   const [duration, setDuration] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
   const playerRef = useRef<ReactPlayer>(null);
+  const { socket } = useSocket();
 
   useEffect(() => {
     setPlaying(true);
   }, [selectedSong]);
 
+  socket.on("playOrPause", (data) => {
+    setPlaying(data);
+  });
+
   const handlePlayPause = () => {
     setPlaying(!playing);
-  };
-
-  const handleVolumeChange = (e: any) => {
-    setVolume(parseFloat(e.target.value));
+    socket.emit("playPause", !playing);
   };
 
   const handleProgress = (state: any) => {

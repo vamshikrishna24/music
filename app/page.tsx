@@ -3,7 +3,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import Music from "@/components/Music";
 import { useSocket } from "@/components/socket-provider";
 import { useAppState } from "@/store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { setSong, songFile } = useAppState();
@@ -12,6 +12,7 @@ export default function Home() {
   socket.on("selectedSong", (file) => {
     setSong(file);
   });
+
   return (
     <div className="h-full overflow-hidden">
       <div style={{ height: "calc(100vh - 145px)" }}>

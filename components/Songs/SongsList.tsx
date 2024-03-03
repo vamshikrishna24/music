@@ -28,7 +28,7 @@ function SongsList() {
 
   const handleSongClick = (file: FileType) => {
     setSong(file);
-    socket.emit("song", file);
+    socket.emit("selectingSong", file);
   };
   return (
     <div>
