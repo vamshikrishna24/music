@@ -22,17 +22,17 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
     setPlaying(true);
   }, [selectedSong]);
 
-  socket.on("playPause", (data) => {
+  socket?.on("playPause", (data) => {
     setPlaying(data);
   });
-  socket.on("progress", (progress) => {
+  socket?.on("progress", (progress) => {
     setProgress(progress);
     if (playerRef.current) playerRef.current.seekTo(progress, "seconds");
   });
 
   const handlePlayPause = () => {
     setPlaying(!playing);
-    socket.emit("setPlayPause", !playing);
+    socket?.emit("setPlayPause", !playing);
   };
 
   const handleProgress = (state: any) => {
@@ -45,7 +45,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
     if (playerRef.current) {
       playerRef.current.seekTo(newProgress, "seconds");
     }
-    socket.emit("setProgress", newProgress);
+    socket?.emit("setProgress", newProgress);
   };
 
   const handleDuration = (duration: number) => {

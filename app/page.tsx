@@ -1,31 +1,51 @@
 "use client";
-import AudioPlayer from "@/components/AudioPlayer";
-import Music from "@/components/Music";
-import { useSocket } from "@/components/socket-provider";
+import { Themetoggler } from "@/components/ThemeToggler";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useAppState } from "@/store/store";
-import { useEffect, useState } from "react";
+import Link from "next/link";
 
-export default function Home() {
-  const { setSong, songFile } = useAppState();
-  const { socket } = useSocket();
+const Home = () => {
+  const { setSolo, setGroup } = useAppState();
+  function handleSoloClick() {
+    setSolo(true);
+    setGroup(false);
+  }
 
-  socket.on("selectedSong", (file) => {
-    setSong(file);
-  });
-
+  function handleGroupClick() {
+    setGroup(true);
+    setSolo(false);
+  }
   return (
-    <div className="h-full overflow-hidden">
-      <div style={{ height: "calc(100vh - 145px)" }}>
-        <Music />
+    <div className=" flex flex-col h-screen">
+      <div className="flex flex-row-reverse w-full">
+        <Themetoggler />
       </div>
-      {songFile && <AudioPlayer selectedSong={songFile} />}
-      {!songFile && (
-        <div className="h-[87px] flex items-center justify-center bg-slate-200 dark:bg-slate-800 shadow-lg rounded-lg ">
-          <p className="text-slate-500 font-semibold text-2xl dark:text-white md:font-bold md:text-3xl">
-            Select a song to play
-          </p>
-        </div>
-      )}
+      <div className="flex-grow flex items-center justify-center">
+        <Card className="w-[350px] ">
+          <CardHeader>
+            <CardTitle>Welcome to Music App</CardTitle>
+            <CardDescription>Select the Session you want</CardDescription>
+          </CardHeader>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" onClick={handleSoloClick}>
+              <Link href="/music">Solo</Link>
+            </Button>
+            <Button onClick={handleGroupClick}>
+              <Link href="/music">Group</Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
