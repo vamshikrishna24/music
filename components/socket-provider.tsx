@@ -18,13 +18,11 @@ const SocketContext = createContext<SocketContextType | null>(null);
 export function SocketProvider({ children }: PropsWithChildren) {
   const socketRef = useRef<Socket | null>(null);
   const [hasSocket, setHasSocket] = useState<boolean | null>(false);
-  const [soloConnection, setSoloConnection] = useState<boolean | null>(false);
   const { solo, group } = useAppState();
 
   useEffect(() => {
     if (solo) {
       socketRef.current = null;
-      setSoloConnection(true);
       setHasSocket(null);
     }
     if (group) {
@@ -47,14 +45,10 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
   if (hasSocket === false)
     return (
-      <div className="flex items-center justify-center h-screen text-3xl bg-slate-800 text-white">
+      <div className="flex items-center justify-center h-screen text-3xl bg-slate-200  dark:bg-slate-800 dark:text-white">
         Connecting to socket...
       </div>
     );
-
-  if (soloConnection == true) {
-    value = { socket: null };
-  }
 
   return (
     <SocketContext.Provider value={value}>{children}</SocketContext.Provider>

@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 interface AppState {
   songFile: FileType | null;
-  setSong: (song: FileType) => void;
+  setSong: (song: FileType | null) => void;
 
   solo: boolean | null;
   setSolo: (solo: boolean) => void;
