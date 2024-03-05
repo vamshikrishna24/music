@@ -22,17 +22,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppState } from "@/store/store";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Home = () => {
+  const router = useRouter();
   const { setSolo, setGroup } = useAppState();
   function handleSoloClick() {
     setSolo(true);
     setGroup(false);
+    router.push("/music");
   }
 
   function handleGroupClick() {
     setGroup(true);
     setSolo(false);
+    router.push("/music");
   }
   return (
     <div className=" flex flex-col h-screen">
@@ -47,7 +51,7 @@ const Home = () => {
           </CardHeader>
           <CardFooter className="flex justify-between">
             <Button variant="outline" onClick={handleSoloClick}>
-              <Link href="/music">Solo</Link>
+              Solo
             </Button>
             <div>
               <Drawer>
@@ -62,7 +66,6 @@ const Home = () => {
                         Upcoming feature, you can just click sumbit for now
                       </DrawerDescription>
                     </DrawerHeader>
-
                     <div className="p-4 pb-0">
                       <div className="flex items-center justify-center space-x-2">
                         <div className="flex-1 ">
@@ -86,9 +89,7 @@ const Home = () => {
                       <div className="mt-3 h-[120px]"></div>
                     </div>
                     <DrawerFooter>
-                      <Button onClick={handleGroupClick}>
-                        <Link href="/music">Submit</Link>
-                      </Button>
+                      <Button onClick={handleGroupClick}>Submit</Button>
                       <DrawerClose asChild>
                         <Button variant="outline">Cancel</Button>
                       </DrawerClose>

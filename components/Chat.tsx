@@ -11,13 +11,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
 const Chat = () => {
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger>
         <span>Chat</span>
       </SheetTrigger>
       <SheetContent>
@@ -33,7 +32,7 @@ const Chat = () => {
         </div>
         <SheetFooter>
           <div className="flex gap-x-2">
-            <Input />
+            <Input type="text" placeholder="Message" />
             <Button>Send</Button>
           </div>
         </SheetFooter>
