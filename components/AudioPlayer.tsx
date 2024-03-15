@@ -16,7 +16,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   const [duration, setDuration] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
   const playerRef = useRef<ReactPlayer>(null);
-  const { socket } = useSocket();
+  const { socket, roomId } = useSocket();
 
   useEffect(() => {
     setPlaying(true);
@@ -32,7 +32,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
 
   const handlePlayPause = () => {
     setPlaying(!playing);
-    socket?.emit("setPlayPause", !playing);
+    socket?.emit("setPlayPause", !playing, roomId);
   };
 
   const handleProgress = (state: any) => {
@@ -45,7 +45,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
     if (playerRef.current) {
       playerRef.current.seekTo(newProgress, "seconds");
     }
-    socket?.emit("setProgress", newProgress);
+    socket?.emit("setProgress", newProgress, roomId);
   };
 
   const handleDuration = (duration: number) => {

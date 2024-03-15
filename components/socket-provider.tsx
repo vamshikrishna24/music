@@ -11,14 +11,34 @@ import {
 } from "react";
 import { Socket, io } from "socket.io-client";
 
-type SocketContextType = { socket: Socket | null };
+type SocketContextType = {
+  socket: Socket | null;
+  roomId: Number | null;
+  username: string | null;
+};
 
 const SocketContext = createContext<SocketContextType | null>(null);
 
+function getUserDataObjectFromLocalStorage(): {
+  username: string | null;
+  roomId: number | null;
+  solo: boolean;
+  group: boolean;
+} {
+  if (typeof window === "undefined" || typeof localStorage === "undefined") {
+    return { username: "", roomId: null, solo: false, group: false };
+  }
+
+  const userDataString = localStorage.getItem("userData") || "";
+  return JSON.parse(userDataString);
+}
+
 export function SocketProvider({ children }: PropsWithChildren) {
   const socketRef = useRef<Socket | null>(null);
+  const { setGroup } = useAppState();
+
   const [hasSocket, setHasSocket] = useState<boolean | null>(false);
-  const { solo, group } = useAppState();
+  const { solo, group, roomId, username } = getUserDataObjectFromLocalStorage();
 
   useEffect(() => {
     if (solo) {
@@ -31,6 +51,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
         socket.on("connect", () => {
           socketRef.current = socket;
           setHasSocket(true);
+          setGroup(group);
+          socket.emit("join-room", roomId);
         });
         socket.on("disconnect", () => {
           setHasSocket(false);
@@ -41,6 +63,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
   let value: SocketContextType = {
     socket: socketRef.current,
+    roomId,
+    username,
   };
 
   if (hasSocket === false)

@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export default function MusicHome() {
   const { setSong, songFile, solo, group } = useAppState();
-  const { socket } = useSocket();
+  const { socket, roomId } = useSocket();
 
   socket?.on("selectedSong", (file) => {
     setSong(file);

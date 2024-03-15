@@ -6,3 +6,10 @@ export type FileType = {
   picture: string;
   song: string;
 };
+
+export type UserData = {
+  username: string | null;
+  roomId: number | null;
+  solo: boolean;
+  group: boolean;
+};

@@ -11,8 +11,9 @@ import { useSocket } from "../socket-provider";
 function SongsList() {
   const [initialFiles, setInitialFiles] = useState<FileType[]>([]);
   const [docs, loading, error] = useCollection(query(collection(db, "music")));
-  const { socket } = useSocket();
+  const { socket, roomId } = useSocket();
   const { setSong, songFile } = useAppState();
+
   useEffect(() => {
     if (!docs) return;
     const files: FileType[] = docs.docs.map((doc) => ({
@@ -28,7 +29,7 @@ function SongsList() {
 
   const handleSongClick = (file: FileType) => {
     setSong(file);
-    socket?.emit("selectingSong", file);
+    socket?.emit("selectingSong", file, roomId);
   };
   return (
     <div>
