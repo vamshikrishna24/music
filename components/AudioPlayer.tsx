@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import { useSocket } from "./socket-provider";
 
 interface AudioPlayerProps {
@@ -13,6 +14,7 @@ interface AudioPlayerProps {
 
 function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   const [playing, setPlaying] = useState(true);
+  const [loop, setLoop] = useState(false);
   const [duration, setDuration] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
   const playerRef = useRef<ReactPlayer>(null);
@@ -28,6 +30,9 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   socket?.on("progress", (progress) => {
     setProgress(progress);
     if (playerRef.current) playerRef.current.seekTo(progress, "seconds");
+  });
+  socket?.on("loop", (loop) => {
+    setLoop(loop);
   });
 
   const handlePlayPause = () => {
@@ -51,6 +56,10 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   const handleDuration = (duration: number) => {
     setDuration(duration);
   };
+  const handleRepeat = () => {
+    setLoop(!loop);
+    socket?.emit("loop", !loop, roomId);
+  };
 
   return (
     <div className="bg-slate-200 dark:bg-slate-800">
@@ -63,6 +72,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
         height="0%"
         width="0%"
         onDuration={handleDuration}
+        loop={loop}
       />
       <div className="flex items-center justify-center mx-4  space-x-4">
         <div className="w-20 h-20">
@@ -73,18 +83,31 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
           />
         </div>
         <div className="flex flex-col flex-grow  items-center space-y-2 mr-4">
-          <input
-            className="w-full"
-            type="range"
-            min={0}
-            max={duration}
-            step={0.1}
-            value={progress}
-            onChange={handleProgressChange}
-          />
-          <button onClick={handlePlayPause}>
-            {playing ? <PauseIcon /> : <PlayArrowIcon />}
-          </button>
+          <p className="text-md font-bold">{selectedSong?.title}</p>
+          <div className="flex w-full gap-x-6">
+            <div className="flex gap-x-3">
+              <button onClick={handlePlayPause}>
+                {playing ? <PauseIcon /> : <PlayArrowIcon />}
+              </button>
+              <button onClick={handleRepeat}>
+                {loop ? (
+                  <RepeatOneIcon />
+                ) : (
+                  <RepeatOneIcon className="text-muted-foreground" />
+                )}
+              </button>
+            </div>
+
+            <input
+              className="w-full"
+              type="range"
+              min={0}
+              max={duration}
+              step={0.1}
+              value={progress}
+              onChange={handleProgressChange}
+            />
+          </div>
         </div>
       </div>
     </div>
