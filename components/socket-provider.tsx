@@ -15,6 +15,7 @@ type SocketContextType = {
   socket: Socket | null;
   roomId: Number | null;
   username: string | null;
+  userId: string | null;
 };
 
 const SocketContext = createContext<SocketContextType | null>(null);
@@ -66,6 +67,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     socket: socketRef.current,
     roomId,
     username,
+    userId: socketRef.current?.id!,
   };
 
   if (hasSocket === false)

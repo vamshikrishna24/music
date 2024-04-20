@@ -13,3 +13,10 @@ export type UserData = {
   solo: boolean;
   group: boolean;
 };
+
+export type MessageData = {
+  Id: string | null;
+  username: string | null;
+  userId: string | null;
+  message: string | null;
+};
