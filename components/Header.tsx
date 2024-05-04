@@ -49,9 +49,11 @@ function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <span className="text-sm font-normal ml-4 hover:underline ">
-          <Link href="/upload">Upload</Link>
-        </span>
+        {navigation === "music" && (
+          <span className="text-sm font-normal ml-4 hover:underline ">
+            <Link href="/upload">Upload</Link>
+          </span>
+        )}
         {group && (
           <span className="text-sm font-normal ml-4 hover:underline cursor-pointer">
             <Chat />
