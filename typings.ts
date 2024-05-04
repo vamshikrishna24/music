@@ -20,3 +20,11 @@ export type MessageData = {
   userId: string | null;
   message: string | null;
 };
+
+export type SongData = {
+  author: string | null;
+  duration: number;
+  thumbnail: string | undefined;
+  title: string | null;
+  videoId: string;
+};

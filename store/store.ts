@@ -1,10 +1,10 @@
-import { FileType } from "@/typings";
+import { FileType ,SongData} from "@/typings";
 
 import { create } from "zustand";
 
 interface AppState {
-  songFile: FileType | null;
-  setSong: (song: FileType | null) => void;
+  songFile: FileType |SongData| null;
+  setSong: (song: FileType |SongData| null) => void;
 
   solo: boolean | null;
   setSolo: (solo: boolean) => void;
@@ -15,7 +15,8 @@ interface AppState {
 
 export const useAppState = create<AppState>((set) => ({
   songFile: null,
-  setSong: (songFile: FileType | null) => set((state) => ({ songFile })),
+  setSong: (songFile: FileType | SongData | null) =>
+    set((state) => ({ songFile })),
 
   solo: null,
   setSolo: (solo: boolean | null) => set((State) => ({ solo })),

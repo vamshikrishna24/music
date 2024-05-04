@@ -46,7 +46,7 @@ export function InputForm() {
       group: true,
     };
     localStorage.setItem("userData", JSON.stringify(userData));
-    router.push("/music");
+    router.push("/online");
   }
 
   return (

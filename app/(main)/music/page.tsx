@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export default function MusicHome() {
   const { setSong, songFile, solo, group } = useAppState();
-  const { socket, roomId } = useSocket();
+  const { socket } = useSocket();
 
   socket?.on("selectedSong", (file) => {
     setSong(file);
@@ -19,7 +19,7 @@ export default function MusicHome() {
 
   return (
     <div className="h-full overflow-hidden">
-      <div style={{ height: "calc(100vh - 145px)" }}>
+      <div style={{ height: "calc(100vh - 140px)" }}>
         <Music />
       </div>
       {songFile && <AudioPlayer selectedSong={songFile} />}

@@ -32,7 +32,7 @@ const Home = () => {
       group: false,
     };
     localStorage.setItem("userData", JSON.stringify(userData));
-    router.push("/music");
+    router.push("/online");
   }
 
   return (

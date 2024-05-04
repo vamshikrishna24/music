@@ -1,6 +1,6 @@
 "use client";
 
-import { FileType } from "@/typings";
+import { FileType, SongData } from "@/typings";
 import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -9,7 +9,7 @@ import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import { useSocket } from "./socket-provider";
 
 interface AudioPlayerProps {
-  selectedSong: FileType | null;
+  selectedSong: FileType | SongData | null;
 }
 
 function AudioPlayer({ selectedSong }: AudioPlayerProps) {
@@ -61,23 +61,36 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
     socket?.emit("loop", !loop, roomId);
   };
 
+  function isFileType(song: FileType | SongData | null): song is FileType {
+    return (song as FileType).song !== undefined;
+  }
+
   return (
     <div className="bg-slate-200 dark:bg-slate-800">
       <ReactPlayer
         ref={playerRef}
-        url={selectedSong?.song}
+        url={
+          isFileType(selectedSong)
+            ? selectedSong?.song
+            : `https://www.youtube.com/watch?v=${
+                (selectedSong as SongData).videoId
+              }`
+        }
         playing={playing}
         //volume={volume}
         onProgress={handleProgress}
-        height="0%"
-        width="0%"
         onDuration={handleDuration}
         loop={loop}
+        hidden={true}
       />
       <div className="flex items-center justify-center mx-4  space-x-4">
         <div className="w-20 h-20">
           <img
-            src={selectedSong?.picture}
+            src={
+              isFileType(selectedSong)
+                ? selectedSong?.picture
+                : (selectedSong as SongData).thumbnail
+            }
             alt="image"
             className="object-cover"
           />

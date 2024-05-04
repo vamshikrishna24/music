@@ -8,7 +8,7 @@ interface SongProps {
 
 function Song({ file, onClick }: SongProps) {
   return (
-    <div className="flex m-5  items-center justify-center">
+    <div className="flex m-2  items-center justify-center">
       <div className="w-full sm:w-1/3 md:w-1/2">
         <div
           className="flex w-full dark:bg-slate-800 rounded-sm items-center bg-slate-200 cursor-pointer"
@@ -23,12 +23,6 @@ function Song({ file, onClick }: SongProps) {
             <p className="text-sm"> {file.year}</p>
           </div>
         </div>
-        {/* <div className="mt-1">
-          <audio controls>
-            <source src={file.song} type="audio/mp3" />
-            Your browser does not support the audio element.
-          </audio>
-        </div> */}
       </div>
     </div>
   );
