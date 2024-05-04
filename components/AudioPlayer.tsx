@@ -72,7 +72,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
         url={
           isFileType(selectedSong)
             ? selectedSong?.song
-            : `https://www.youtube.com/watch?v=${
+            : `https://www.youtube.com/embed/${
                 (selectedSong as SongData).videoId
               }`
         }
