@@ -7,17 +7,24 @@ import { SongData } from "@/typings";
 import SongList from "@/components/onlineSongs/SongList";
 import AudioPlayer from "@/components/AudioPlayer";
 import { useAppState } from "@/store/store";
-import Image from "next/image";
+import { useSocket } from "@/components/socket-provider";
 
 const OnlineMusic = () => {
   const { setSong, songFile, solo, group } = useAppState();
+  const { socket } = useSocket();
   const [songs, setSongs] = useState<SongData[]>([]);
   const [search, setSearch] = useState<string>("");
+
+  console.log(songFile);
+  socket?.on("selectedSong", (file) => {
+    setSong(file);
+  });
 
   const handleClick = () => {
     if (search === "") return;
     fetchFromAPI(`search?q=${search}`).then((data) => setSongs(data.result));
   };
+
   return (
     <div className=" pt-2">
       <div className="mx-4">

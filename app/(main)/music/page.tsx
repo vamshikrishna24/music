@@ -12,10 +12,7 @@ export default function MusicHome() {
   socket?.on("selectedSong", (file) => {
     setSong(file);
   });
-
-  useEffect(() => {
-    setSong(null);
-  }, [solo, group]);
+  console.log(songFile);
 
   return (
     <div className="h-full overflow-hidden">

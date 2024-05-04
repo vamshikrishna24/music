@@ -36,7 +36,7 @@ function getUserDataObjectFromLocalStorage(): {
 
 export function SocketProvider({ children }: PropsWithChildren) {
   const socketRef = useRef<Socket | null>(null);
-  const { setGroup, setSolo } = useAppState();
+  const { setGroup, setSolo, setSong } = useAppState();
 
   const [hasSocket, setHasSocket] = useState<boolean | null>(false);
   const { solo, group, roomId, username } = getUserDataObjectFromLocalStorage();
@@ -44,6 +44,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     setSolo(solo);
     setGroup(group);
+    setSong(null);
     if (solo) {
       socketRef.current = null;
       setHasSocket(null);
