@@ -6,13 +6,13 @@ import { useAppState } from "@/store/store";
 import { useEffect } from "react";
 
 export default function MusicHome() {
-  const { setSong, songFile, solo, group } = useAppState();
+  const { setSong, songFile } = useAppState();
   const { socket } = useSocket();
 
   socket?.on("selectedSong", (file) => {
     setSong(file);
   });
-  console.log(songFile);
+
 
   return (
     <div className="h-full overflow-hidden">

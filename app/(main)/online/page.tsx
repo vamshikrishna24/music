@@ -10,12 +10,11 @@ import { useAppState } from "@/store/store";
 import { useSocket } from "@/components/socket-provider";
 
 const OnlineMusic = () => {
-  const { setSong, songFile, solo, group } = useAppState();
+  const { setSong, songFile} = useAppState();
   const { socket } = useSocket();
   const [songs, setSongs] = useState<SongData[]>([]);
   const [search, setSearch] = useState<string>("");
 
-  console.log(songFile);
   socket?.on("selectedSong", (file) => {
     setSong(file);
   });
