@@ -11,6 +11,10 @@ export default function MusicHome() {
   socket?.on("selectedSong", (file) => {
     setSong(file);
   });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6a0f07ab2f2a074040e2a632f4f25550149c2a99
 
   return (
     <div className="h-full overflow-hidden">
