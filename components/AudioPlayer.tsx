@@ -19,6 +19,13 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   const [progress, setProgress] = useState<number>(0);
   const playerRef = useRef<ReactPlayer>(null);
   const { socket, roomId } = useSocket();
+  var videoUrl = "";
+
+  if ((selectedSong! as SongData).videoId) {
+    videoUrl = `https://www.youtube.com/watch?v=${
+      (selectedSong! as SongData).videoId
+    }`;
+  }
 
   useEffect(() => {
     setPlaying(true);
@@ -72,9 +79,9 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
         url={
           isFileType(selectedSong)
             ? selectedSong?.song
-            : `https://www.youtube.com/embed/${
-                (selectedSong as SongData).videoId
-              }?autoplay=1`
+            : `${
+                process.env.NEXT_PUBLIC_SOCKET_URL
+              }/audio?url=${encodeURIComponent(videoUrl)}`
         }
         playing={playing}
         //volume={volume}
