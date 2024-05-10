@@ -74,7 +74,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
             ? selectedSong?.song
             : `https://www.youtube.com/embed/${
                 (selectedSong as SongData).videoId
-              }`
+              }?autoplay=1`
         }
         playing={playing}
         //volume={volume}
