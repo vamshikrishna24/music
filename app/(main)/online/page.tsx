@@ -10,11 +10,8 @@ import { useSocket } from "@/components/socket-provider";
 import AudioPlayer from "@/components/AudioPlayer";
 
 const OnlineMusic = () => {
-<<<<<<< HEAD
   const { setSong, songFile } = useAppState();
-=======
-  const { setSong, songFile} = useAppState();
->>>>>>> 6a0f07ab2f2a074040e2a632f4f25550149c2a99
+
   const { socket } = useSocket();
   const [songs, setSongs] = useState<SongData[]>([]);
   const [search, setSearch] = useState<string>("");
