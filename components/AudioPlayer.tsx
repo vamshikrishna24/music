@@ -18,6 +18,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   const [duration, setDuration] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
   const playerRef = useRef<ReactPlayer>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const { socket, roomId } = useSocket();
   var videoUrl = "";
 
@@ -26,6 +27,42 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
       (selectedSong! as SongData).videoId
     }`;
   }
+
+  useEffect(() => {
+    fetch(`/api/audio?url=${encodeURIComponent(videoUrl)}`)
+      .then((res) => res.body)
+      .then((body) => {
+        const reader = body?.getReader();
+        return new ReadableStream<Uint8Array>({
+          start(controller) {
+            return pump();
+            function pump(): Promise<any> {
+              //@ts-ignore
+              return reader.read().then(({ done, value }) => {
+                // When no more data needs to be consumed, close the stream
+                if (done) {
+                  controller.close();
+                  return;
+                }
+                // Enqueue the next data chunk into our target stream
+                controller.enqueue(value);
+                return pump();
+              });
+            }
+          },
+        });
+      })
+      .then((stream) => new Response(stream))
+      .then((response) => response.blob())
+      .then((blob) => URL.createObjectURL(blob))
+      .then((url) => {
+        if (audioRef.current) {
+          audioRef.current.src = url;
+          audioRef.current.play();
+        }
+      })
+      .catch((err) => console.error(err));
+  }, [(selectedSong as SongData).videoId]);
 
   useEffect(() => {
     setPlaying(true);
@@ -44,6 +81,9 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
 
   const handlePlayPause = () => {
     setPlaying(!playing);
+    if (playing) {
+      audioRef.current?.pause();
+    } else audioRef.current?.play();
     socket?.emit("setPlayPause", !playing, roomId);
   };
 
@@ -60,12 +100,29 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
     socket?.emit("setProgress", newProgress, roomId);
   };
 
+  const handleProgressSongChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newProgress = parseFloat(e.target.value);
+    setProgress(newProgress);
+    if (audioRef.current) {
+      const newTime = (newProgress / 100) * audioRef.current.duration;
+      audioRef.current.currentTime = newTime;
+    }
+  };
+
   const handleDuration = (duration: number) => {
     setDuration(duration);
   };
   const handleRepeat = () => {
     setLoop(!loop);
     socket?.emit("loop", !loop, roomId);
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      var progress =
+        (audioRef.current?.currentTime / audioRef.current?.duration) * 100;
+      setProgress(progress);
+    }
   };
 
   function isFileType(song: FileType | SongData | null): song is FileType {
@@ -76,20 +133,20 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
     <div className="bg-slate-200 dark:bg-slate-800">
       <ReactPlayer
         ref={playerRef}
-        url={
-          isFileType(selectedSong)
-            ? selectedSong?.song
-            : `${
-                process.env.NEXT_PUBLIC_SOCKET_URL
-              }/audio?url=${encodeURIComponent(videoUrl)}`
-        }
+        url={(selectedSong as FileType).song}
         playing={playing}
-        //volume={volume}
         onProgress={handleProgress}
         onDuration={handleDuration}
         loop={loop}
         hidden={true}
       />
+      <audio
+        ref={audioRef}
+        id="wavSource"
+        hidden
+        onTimeUpdate={handleTimeUpdate}
+        loop={loop}
+      ></audio>
       <div className="flex items-center justify-center mx-4  space-x-4">
         <div className="w-20 h-20">
           <img
@@ -117,16 +174,25 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
                 )}
               </button>
             </div>
-
-            <input
-              className="w-full"
-              type="range"
-              min={0}
-              max={duration}
-              step={0.1}
-              value={progress}
-              onChange={handleProgressChange}
-            />
+            {(selectedSong as SongData).videoId ? (
+              <input
+                className="w-full"
+                type="range"
+                min={0}
+                value={progress}
+                onChange={handleProgressSongChange}
+              />
+            ) : (
+              <input
+                className="w-full"
+                type="range"
+                min={0}
+                max={duration}
+                step={0.1}
+                value={progress}
+                onChange={handleProgressChange}
+              />
+            )}
           </div>
         </div>
       </div>

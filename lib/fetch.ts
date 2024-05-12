@@ -1,4 +1,6 @@
+"use Server";
 import axios from "axios";
+import ytdl from "discord-ytdl-core";
 
 const BASE_URL = process.env.NEXT_PUBLIC_MUSIC_BASE_URL;
 const options = {
