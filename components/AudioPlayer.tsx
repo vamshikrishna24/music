@@ -160,7 +160,6 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
       <audio
         ref={audioRef}
         id="wavSource"
-        hidden
         onTimeUpdate={handleTimeUpdate}
         loop={loop}
       ></audio>
