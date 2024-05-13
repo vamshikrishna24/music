@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { DrawerClose } from "./ui/drawer";
 import { UserData } from "@/typings";
+import { useAppState } from "@/store/store";
 
 const FormSchema = z.object({
   username: z.string().min(4, {
@@ -30,6 +31,7 @@ const FormSchema = z.object({
 
 export function InputForm() {
   const router = useRouter();
+  const { setNavigation } = useAppState();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -46,6 +48,7 @@ export function InputForm() {
       group: true,
     };
     localStorage.setItem("userData", JSON.stringify(userData));
+    setNavigation("/online");
     router.push("/online");
   }
 

@@ -17,6 +17,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useAppState } from "@/store/store";
 
 import { UserData } from "@/typings";
 
@@ -24,7 +25,7 @@ import { useRouter } from "next/navigation";
 
 const Home = () => {
   const router = useRouter();
-
+  const { setNavigation } = useAppState();
   function handleSoloClick() {
     const userData: UserData = {
       username: null,
@@ -34,6 +35,7 @@ const Home = () => {
     };
     localStorage.setItem("userData", JSON.stringify(userData));
     router.push("/online");
+    setNavigation("/online");
   }
 
   return (
