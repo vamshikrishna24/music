@@ -34,32 +34,9 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
   useEffect(() => {
     setLoading(true);
     fetch(`/api/audio?url=${encodeURIComponent(videoUrl)}`)
-      .then((res) => res.body)
-      .then((body) => {
-        const reader = body?.getReader();
-        return new ReadableStream<Uint8Array>({
-          start(controller) {
-            return pump();
-            function pump(): Promise<any> {
-              //@ts-ignore
-              return reader.read().then(({ done, value }) => {
-                // When no more data needs to be consumed, close the stream
-                if (done) {
-                  controller.close();
-                  return;
-                }
-                // Enqueue the next data chunk into our target stream
-                controller.enqueue(value);
-                return pump();
-              });
-            }
-          },
-        });
-      })
-      .then((stream) => new Response(stream))
-      .then((response) => response.blob())
-      .then((blob) => URL.createObjectURL(blob))
-      .then((url) => {
+      .then((res) => res.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
         setLoading(false);
         setBlobUrl(url);
         setPlaying(true);
