@@ -25,9 +25,16 @@ function getUserDataObjectFromLocalStorage(): {
   roomId: number | null;
   solo: boolean;
   group: boolean;
+  navigation: string | null;
 } {
   if (typeof window === "undefined" || typeof localStorage === "undefined") {
-    return { username: "", roomId: null, solo: false, group: false };
+    return {
+      username: "",
+      roomId: null,
+      solo: false,
+      group: false,
+      navigation: "/",
+    };
   }
 
   const userDataString = localStorage.getItem("userData") || "";
@@ -36,15 +43,18 @@ function getUserDataObjectFromLocalStorage(): {
 
 export function SocketProvider({ children }: PropsWithChildren) {
   const socketRef = useRef<Socket | null>(null);
-  const { setGroup, setSolo, setSong } = useAppState();
+  const { setGroup, setSolo, setSong, setNavigation } = useAppState();
 
   const [hasSocket, setHasSocket] = useState<boolean | null>(false);
-  const { solo, group, roomId, username } = getUserDataObjectFromLocalStorage();
+  const { solo, group, roomId, username, navigation } =
+    getUserDataObjectFromLocalStorage();
 
   useEffect(() => {
     setSolo(solo);
     setGroup(group);
     setSong(null);
+    setNavigation(navigation!);
+
     if (solo) {
       socketRef.current = null;
       setHasSocket(null);

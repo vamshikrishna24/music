@@ -12,6 +12,7 @@ export type UserData = {
   roomId: number | null;
   solo: boolean;
   group: boolean;
+  navigation: string | null;
 };
 
 export type MessageData = {

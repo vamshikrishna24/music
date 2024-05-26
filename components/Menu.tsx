@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Sheet,
   SheetClose,
@@ -23,6 +23,17 @@ const Menu = () => {
   const router = useRouter();
   const { navigation, setNavigation } = useAppState();
   const btnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      const userData = JSON.parse(storedUserData);
+      userData.navigation = navigation;
+      const newUserData = JSON.stringify(userData);
+      localStorage.setItem("userData", newUserData);
+    }
+  }, [navigation]);
+
   const handleClick = (option: any) => {
     const key = Object.keys(option)[0];
     const route = option[key];

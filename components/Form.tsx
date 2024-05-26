@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,7 +30,7 @@ const FormSchema = z.object({
 
 export function InputForm() {
   const router = useRouter();
-  const { setNavigation } = useAppState();
+  const { setNavigation, navigation } = useAppState();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -46,10 +45,11 @@ export function InputForm() {
       roomId: Number(data.roomId),
       solo: false,
       group: true,
+      navigation: "/online",
     };
     localStorage.setItem("userData", JSON.stringify(userData));
     setNavigation("/online");
-    router.push("/online");
+    router.replace("/online");
   }
 
   return (

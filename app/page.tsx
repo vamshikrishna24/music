@@ -12,7 +12,6 @@ import {
 import {
   Drawer,
   DrawerContent,
-  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -32,9 +31,10 @@ const Home = () => {
       roomId: null,
       solo: true,
       group: false,
+      navigation: "/online",
     };
     localStorage.setItem("userData", JSON.stringify(userData));
-    router.push("/online");
+    router.replace("/online");
     setNavigation("/online");
   }
 
