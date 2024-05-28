@@ -33,13 +33,12 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
 
   useEffect(() => {
     setLoading(true);
+    setPlaying(false);
     fetch(`/api/audio?url=${encodeURIComponent(videoUrl)}`)
       .then((res) => res.blob())
-      .then((blob) => {
-        const file = new File([blob], "audio.mp3", { type: "audio/mpeg" });
-        const url = URL.createObjectURL(file);
+      .then((blob) => URL.createObjectURL(blob))
+      .then((url) => {
         setBlobUrl(url);
-        setPlaying(true);
         setLoading(false);
       })
       .catch((err) => {
