@@ -15,7 +15,7 @@ const SongList = ({ songs }: { songs: SongData[] }) => {
   };
   return (
     <div className="h-full overflow-y-scroll overflow-x-hidden">
-      {songs.map((song, index) => (
+      {songs?.map((song, index) => (
         <div
           key={index}
           className="flex m-2  items-center justify-center "

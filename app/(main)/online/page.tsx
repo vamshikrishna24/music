@@ -22,7 +22,12 @@ const OnlineMusic = () => {
 
   const handleClick = () => {
     if (search === "") return;
-    fetchFromAPI(`search?q=${search}`).then((data) => setSongs(data.result));
+    fetchFromAPI(`search?q=${search}`).then((data) => {
+      if (data.result) setSongs(data.result);
+      else {
+        setSongs(data);
+      }
+    });
   };
 
   return (
@@ -45,7 +50,9 @@ const OnlineMusic = () => {
       {!songFile && (
         <div className="h-[87px] flex items-center justify-center bg-slate-200 dark:bg-slate-800 shadow-lg rounded-lg ">
           <p className="text-slate-500 font-semibold text-2xl dark:text-white md:font-bold md:text-3xl">
-            {songs.length === 0 ? "Search for a Song" : "Select a song to play"}
+            {songs?.length === 0
+              ? "Search for a Song"
+              : "Select a song to play"}
           </p>
         </div>
       )}

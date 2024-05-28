@@ -31,24 +31,16 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
     }`;
   }
 
-  const blobToDataURL = (blob: any) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
-
   useEffect(() => {
     setLoading(true);
     fetch(`/api/audio?url=${encodeURIComponent(videoUrl)}`)
       .then((res) => res.blob())
-      .then(blobToDataURL)
-      .then((dataURL) => {
-        setLoading(false);
-        setBlobUrl(dataURL as string);
+      .then((blob) => {
+        const file = new File([blob], "audio.mp3", { type: "audio/mpeg" });
+        const url = URL.createObjectURL(file);
+        setBlobUrl(url);
         setPlaying(true);
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
