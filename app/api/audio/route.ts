@@ -31,7 +31,6 @@ export function GET(req: NextRequest) {
 
     const audioStream = ytdl(videoUrl, {
       filter: "audioonly",
-      highWaterMark: 1 << 25,
     });
     const stream = iteratorToLiveStream(audioStream[Symbol.asyncIterator]());
 
