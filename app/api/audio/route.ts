@@ -22,7 +22,6 @@ function iteratorToLiveStream(iterator: AsyncIterableIterator<any>) {
 }
 
 export function GET(req: NextRequest) {
-  noStore();
   try {
     const videoUrl: string | null = req.nextUrl.searchParams.get("url");
     if (!videoUrl) {
@@ -37,7 +36,6 @@ export function GET(req: NextRequest) {
     return new Response(stream, {
       headers: {
         "content-type": "audio/mpeg",
-        "transfer-encoding": "chunked", // Enable chunked transfer for live streaming
       },
     });
   } catch (err) {
