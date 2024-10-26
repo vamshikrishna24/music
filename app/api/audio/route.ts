@@ -1,16 +1,22 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { NextRequest } from "next/server";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 
-function iteratorToStream(iterator: any) {
+function iteratorToLiveStream(iterator: AsyncIterableIterator<any>) {
   return new ReadableStream({
     async pull(controller) {
-      const { value, done } = await iterator.next();
-      if (done) {
+      try {
+        for await (const chunk of iterator) {
+          controller.enqueue(chunk);
+        }
         controller.close();
-      } else {
-        controller.enqueue(value);
+      } catch (err) {
+        console.error("Stream error:", err);
+        controller.error(err);
       }
+    },
+    cancel() {
+      console.log("Stream canceled by the client.");
     },
   });
 }
@@ -18,15 +24,25 @@ function iteratorToStream(iterator: any) {
 export function GET(req: NextRequest) {
   noStore();
   try {
-    const videoUrl: any = req.nextUrl.searchParams.get("url");
-    const audioStream = ytdl(videoUrl, { filter: "audioonly" });
-    const stream = iteratorToStream(audioStream.iterator());
+    const videoUrl: string | null = req.nextUrl.searchParams.get("url");
+    if (!videoUrl) {
+      return new Response("Missing video URL", { status: 400 });
+    }
+
+    const audioStream = ytdl(videoUrl, {
+      filter: "audioonly",
+      highWaterMark: 1 << 25,
+    });
+    const stream = iteratorToLiveStream(audioStream[Symbol.asyncIterator]());
 
     return new Response(stream, {
-      headers: { "content-type": "audio/mpeg" },
+      headers: {
+        "content-type": "audio/mpeg",
+        "transfer-encoding": "chunked", // Enable chunked transfer for live streaming
+      },
     });
   } catch (err) {
-    console.error(err);
-    return new Response("error");
+    console.error("Error fetching video stream:", err);
+    return new Response("Error fetching video stream", { status: 500 });
   }
 }
