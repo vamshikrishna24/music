@@ -2,6 +2,8 @@ import { unstable_noStore as noStore } from "next/cache";
 import { NextRequest } from "next/server";
 import ytdl from "@distube/ytdl-core";
 
+export const dynamic = "force-dynamic";
+
 function iteratorToLiveStream(iterator: AsyncIterableIterator<any>) {
   return new ReadableStream({
     async pull(controller) {
@@ -22,6 +24,7 @@ function iteratorToLiveStream(iterator: AsyncIterableIterator<any>) {
 }
 
 export function GET(req: NextRequest) {
+  noStore();
   try {
     const videoUrl: string | null = req.nextUrl.searchParams.get("url");
     if (!videoUrl) {
