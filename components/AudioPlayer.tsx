@@ -40,6 +40,7 @@ function AudioPlayer({ selectedSong }: AudioPlayerProps) {
       .then((url) => {
         setBlobUrl(url);
         setLoading(false);
+        setPlaying(true);
       })
       .catch((err) => {
         console.error(err);

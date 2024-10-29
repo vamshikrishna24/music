@@ -1,32 +1,47 @@
-import { unstable_noStore as noStore } from "next/cache";
 import { NextRequest } from "next/server";
 import ytdl from "@distube/ytdl-core";
+import { PassThrough } from "stream";
 
-function iteratorToStream(iterator: any) {
+function streamToReadable(passThrough: PassThrough) {
   return new ReadableStream({
-    async pull(controller) {
-      const { value, done } = await iterator.next();
-      if (done) {
+    start(controller) {
+      passThrough.on("data", (chunk) => {
+        controller.enqueue(chunk);
+      });
+
+      passThrough.on("end", () => {
         controller.close();
-      } else {
-        controller.enqueue(value);
-      }
+      });
+
+      passThrough.on("error", (err) => {
+        console.error("PassThrough stream error:", err);
+        controller.error(err);
+      });
+    },
+    cancel() {
+      passThrough.destroy();
     },
   });
 }
 
-export function GET(req: NextRequest) {
-  noStore();
+export async function GET(req: NextRequest) {
   try {
-    const videoUrl: any = req.nextUrl.searchParams.get("url");
-    const audioStream = ytdl(videoUrl, { filter: "audioonly" });
-    const stream = iteratorToStream(audioStream.iterator());
+    const videoUrl = req.nextUrl.searchParams.get("url");
+    if (!videoUrl) {
+      return new Response("No video URL provided", { status: 400 });
+    }
 
-    return new Response(stream, {
-      headers: { "content-type": "audio/mpeg" },
+    const audioStream = ytdl(videoUrl, { filter: "audioonly" });
+    const passThrough = new PassThrough();
+    audioStream.pipe(passThrough);
+
+    const readableStream = streamToReadable(passThrough);
+
+    return new Response(readableStream, {
+      headers: { "Content-Type": "audio/mpeg" },
     });
   } catch (err) {
-    console.error(err);
-    return new Response("error");
+    console.error("Streaming error:", err);
+    return new Response("Error during streaming", { status: 500 });
   }
 }
